@@ -5,7 +5,7 @@ export type GetRouteRequest ={
 }
 export type GetRouteResponse = {
   status:"success",
-  path:[latitude: string,longitude: string][],
+  path:[longitude:number,latitude:number][],
   total_distance:number,
   total_time:number
 } | {
@@ -53,7 +53,12 @@ export type GetRouteResponse = {
  *    HTTP/1.1 500 Internal Server Error
  *    Internal Server Error
  */
-export default async ({token}:GetRouteRequest):Promise<GetRouteResponse>=>{
+export const getRoute = async ({token}:GetRouteRequest):Promise<GetRouteResponse>=>{
   //TODO: validation
-  return axios.get<GetRouteResponse>(new URL(`./route/${token}`, process.env.NEXT_PUBLIC_ROUTE_CHECK_L1_BASE_URL).toString()).then(res=>res.data);
+  return axios.get<GetRouteResponse>(new URL(`./route/${token}`, process.env.NEXT_PUBLIC_ROUTE_CHECK_L1_BASE_URL).toString()).then(res=>{
+    if(res.data && res.data.status=="success"){
+      res.data.path = res.data.path.map(it=>[Number.parseFloat(it[1].toString()),parseFloat(it[0].toString())]); //flip [latitude:number,longitude:number] to [longitude:number,latitude:number]
+    }
+    return res.data;
+  });
 }

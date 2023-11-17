@@ -22,7 +22,7 @@ export type PostRouteResponse = {
  *    HTTP/1.1 500 Internal Server Error
  *    Internal Server Error
  */
-export default async (request:PostRouteRequest):Promise<PostRouteResponse>=>{
+export const postRoute = async (request:PostRouteRequest):Promise<PostRouteResponse>=>{
   //TODO: validation
   return axios.post<PostRouteResponse>(new URL(`./route/`, process.env.NEXT_PUBLIC_ROUTE_CHECK_L1_BASE_URL).toString(), request, {
     headers: {
