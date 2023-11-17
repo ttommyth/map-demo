@@ -67,11 +67,11 @@ const RouteCheckSide = () => {
       <div className="absolute left-0  top-0 py-4 h-full"><div className="border-dotted border-l-2 border-gray-500 h-full ml-[0.7rem] "></div></div>
       <span className="relative flex items-center  w-full gap-2 bg-base-50">
         <FaRegCircle className="w-icon h-icon "/>
-        <LocationTextBox inputProps={{...register("origin"), disabled: formLoading}} reset={()=>setValue("origin", "")} label="Origin" name="origin" error={errors.origin?.message}/>
+        <LocationTextBox inputProps={{...register("origin"), disabled: formLoading}} reset={()=>setValue("origin", "")} label="Starting location" name="origin" error={errors.origin?.message}/>
       </span>
       <span className="relative flex items-center   w-full gap-2 bg-base-50">
         <HiMapPin className="w-icon h-icon"/>
-        <LocationTextBox inputProps={{...register("destination"), disabled: formLoading}} reset={()=>setValue("destination", "")} label="Destination" name="destination" error={errors.destination?.message}/>
+        <LocationTextBox inputProps={{...register("destination"), disabled: formLoading}} reset={()=>setValue("destination", "")} label="Drop-off point" name="destination" error={errors.destination?.message}/>
       </span>
     </div>
     <div className="flex flex-col gap-4 relative">
