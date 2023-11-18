@@ -1,8 +1,8 @@
 "use client";
 
 import { MapProvider } from "@/hooks/MapProvider";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
-import { QueryClient, QueryClientProvider } from "react-query";
 
 function Providers({ children }: React.PropsWithChildren) {
   const [client] = React.useState(new QueryClient({

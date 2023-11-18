@@ -1,8 +1,8 @@
 "use client"
 import { getMapboxDirections } from "@/data/mapbox-directions-api/get";
+import { useQuery } from "@tanstack/react-query";
 import { FC, PropsWithChildren, createContext, useContext, useEffect, useMemo, useState } from "react";
 import { MapMouseEvent } from "react-map-gl";
-import { useMutation, useQuery } from "react-query";
 
 export type MapContextType={
   mapConfig?:{
@@ -36,11 +36,13 @@ export const MapProvider:FC<PropsWithChildren<unknown>> = ({children})=>{
   const [onMapClick, setOnMapClick] = useState<MapContextType["onMapClick"] | undefined>(undefined);
   const [mapConfig, setMapConfig] = useState<MapContextType["mapConfig"]>(undefined);
   const [path, setPath] = useState<[longitude:number,latitude:number][] | undefined>(undefined);
-  const getDirectionQuery = useQuery(["getDirection", ...path??[]],()=>{
-    return getMapboxDirections({coordinates: path!, profile: "driving"});
-  }, {
+  const getDirectionQuery = useQuery({
+    queryKey: ["getDirection", ...path??[]],
+    queryFn:()=>{
+      return getMapboxDirections({coordinates: path!, profile: "driving"});
+    },
     enabled: !!path,
-  })
+  });
   
   const direction = useMemo(()=>{
     if(getDirectionQuery.status =="success" && getDirectionQuery.data.routes.length>0){

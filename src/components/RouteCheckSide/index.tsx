@@ -1,7 +1,6 @@
 "use client";
 import LocationTextBox from "@/components/LocationTextBox"
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useMutation, useQuery } from "react-query";
 import { PostRouteRequest, getRoute, postRoute } from "@/data/route-check-l1-api/route";
 import { useMap } from "@/hooks/MapProvider";
 import { useEffect } from "react";
@@ -10,6 +9,7 @@ import { HiMapPin} from "react-icons/hi2";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { useMutation, useQuery } from "@tanstack/react-query";
 type RouteCheckFormInputs = {
   origin: string,
   destination: string,
@@ -33,26 +33,26 @@ const RouteCheckSide = () => {
   const postRouteMutate = useMutation({
     mutationFn: (values: PostRouteRequest) => postRoute(values),
   })
-  const getRouteQuery = useQuery(["getRoute", postRouteMutate.data?.token],
-    async ()=>{
+  const getRouteQuery = useQuery({
+    queryKey:["getRoute", postRouteMutate.data?.token],
+    queryFn: async ()=>{
       const res = await getRoute({token:postRouteMutate.data!.token});
       if(res.status=="in progress"){
         throw res;
       }
       return res;
     },
-    {
-      enabled:!!postRouteMutate.data?.token,
-      retry:(failureCount, error: any)=>{
-        if(error.status=="in progress"){
-          return failureCount<20;
-        }
-        return false;
-      },
-      retryDelay: 1000
-    });
+    enabled:!!postRouteMutate.data?.token,
+    retry:(failureCount, error: any)=>{
+      if(error.status=="in progress"){
+        return failureCount<20;
+      }
+      return false;
+    },
+    retryDelay: 1000
+  });
   useEffect(()=>{
-    if(postRouteMutate.isLoading || getRouteQuery.isFetching)
+    if(postRouteMutate.isPending || getRouteQuery.isFetching)
       return;
     if(getRouteQuery.data?.status=="success" && getRouteQuery.status=="success"){
       setPath(getRouteQuery.data?.path);
@@ -61,7 +61,7 @@ const RouteCheckSide = () => {
     }
   }, [postRouteMutate, getRouteQuery]);
   const onSubmit: SubmitHandler<RouteCheckFormInputs> = data => postRouteMutate.mutate(data);
-  const formLoading = postRouteMutate.isLoading || getRouteQuery.isFetching;
+  const formLoading = postRouteMutate.isPending || getRouteQuery.isFetching;
   return <form onSubmit={handleSubmit(onSubmit)} className="p-4 flex flex-col gap-4">
     <div className="flex flex-col gap-4 relative">
       <div className="absolute left-0  top-0 py-4 h-full"><div className="border-dotted border-l-2 border-gray-500 h-full ml-[0.7rem] "></div></div>
