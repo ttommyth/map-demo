@@ -38,12 +38,16 @@ const TestingComponent = (props: {ctxCalback: (ctx: MapContextType)=>unknown}) =
   );
 };
 it('useMap only works when provider exist', async () => {
+  const spy = jest.spyOn(console, 'error')
+  spy.mockImplementation(() => {})
+
   expect(
     ()=>{
       render(
         <TestingComponent ctxCalback={()=>{}}/>
       )}
-  ).toThrow("useMap must be used within a MapProvider");
+  ).toThrow("useMap must be used within a MapProvider")
+  spy.mockRestore()
 });
 
 it('MapProvider updated map config', async () => {

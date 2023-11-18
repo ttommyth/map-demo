@@ -87,26 +87,26 @@ const RouteCheckSide = () => {
       {/* <button type="button" onClick={()=>getRouteQuery.refetch()}>retry get route</button> */}
 
       {postRouteMutate.status=="error"?
-        <span className="text-error-500">
+        <span className="text-error-500" role="alert">
           Failed to get route token, <button type="submit" value="retry">click here to retry</button>
         </span>:<></>}
 
       {getRouteQuery.isFetching?<>
       </>:<>
         {(getRouteQuery.status=="error")?
-          <span className="text-error-500">
+          <span className="text-error-500" role="alert">
           Failed to get route detail, <button type="button" onClick={()=>getRouteQuery.refetch()}>click here to retry</button>
           </span>:<></>}
         {(getRouteQuery.status=="success"&&getRouteQuery.data?.status=="failure")?
-          <span className="text-error-500">
+          <span className="text-error-500" role="alert">
             {getRouteQuery.data.error}, <button type="button" onClick={()=>getRouteQuery.refetch()}>click here to retry</button>
           </span>:<></>}
         {
           (getRouteQuery.status=="success"&&getRouteQuery.data?.status=="success")?
             <div className="border-success-600 border rounded-md w-full p-4 flex flex-col bg-success-100">
               <span className="text-success-600 text-xl">Route Found</span>
-              <span>Total Time: {getRouteQuery.data.total_time}</span>
-              <span>Total Distance: {getRouteQuery.data.total_distance}</span>
+              <span title="Total Time">Total Time: {getRouteQuery.data.total_time}</span>
+              <span title="Total Distance">Total Distance: {getRouteQuery.data.total_distance}</span>
             </div>:<>
             </>
         }
