@@ -5,9 +5,10 @@ import Map, { Layer, MapRef, MapboxStyle, Marker, Source } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 import { useMap } from "@/hooks/MapProvider";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { HiMapPin } from "react-icons/hi2";
 import MAP_STYLE from './map-style-basic-v8.json';
+import { FaRegCircle } from "react-icons/fa";
 
 const MainMap = ()=>{
   const [cursor, setCursor] = useState<string>('auto');
@@ -16,6 +17,10 @@ const MainMap = ()=>{
   
   const onMouseEnter = useCallback(() => setCursor('pointer'), []);
   const onMouseLeave = useCallback(() => setCursor('auto'), []);
+
+  useEffect(()=>{
+    mapRef.current?.flyTo({center: [mapConfig?.longitude??0, mapConfig?.latitude??0], zoom: mapConfig?.zoom??0, duration: 2000 });
+  }, [mapConfig])
   
   return (
     <Map

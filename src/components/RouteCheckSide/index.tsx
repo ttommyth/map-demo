@@ -22,7 +22,7 @@ const validationSchema = yup.object({
 
 
 const RouteCheckSide = () => {
-  const {setPath} = useMap();
+  const {setPath, setMapConfig} = useMap();
   const { register, handleSubmit, watch,setValue, control, formState: { errors } } = useForm<RouteCheckFormInputs>({
     resolver: yupResolver(validationSchema),
     defaultValues:{
@@ -56,10 +56,11 @@ const RouteCheckSide = () => {
       return;
     if(getRouteQuery.data?.status=="success" && getRouteQuery.status=="success"){
       setPath(getRouteQuery.data?.path);
+      setMapConfig({latitude: getRouteQuery.data?.path[0][1], longitude: getRouteQuery.data?.path[0][0], zoom: 12});
     }else{
       setPath(undefined);
     }
-  }, [postRouteMutate, getRouteQuery]);
+  }, [getRouteQuery.data, getRouteQuery.data, getRouteQuery.isFetching, getRouteQuery.status, postRouteMutate.isPending]);
   const onSubmit: SubmitHandler<RouteCheckFormInputs> = data => postRouteMutate.mutate(data);
   const formLoading = postRouteMutate.isPending || getRouteQuery.isFetching;
   return <form onSubmit={handleSubmit(onSubmit)} className="p-4 flex flex-col gap-4">

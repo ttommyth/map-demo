@@ -36,7 +36,7 @@ const LocationTextBox:FC<{value: string, onValueChange:(v:string)=>unknown, disa
         {
           waitingMapClickKey==name?
             <span className="text-gray-500 flex">
-              <span className="hidden sm:block">click on the map to select location</span>
+              <span className="hidden lg:block">click on the map to select location</span>
               <HiMapPin className="" title="click on the map to select location"/>
             </span>:<></>
         }
@@ -77,7 +77,7 @@ const LocationTextBox:FC<{value: string, onValueChange:(v:string)=>unknown, disa
           relatedLocationQuery.isFetching? 
             <AiOutlineLoading3Quarters className="w-icon h-icon animate-spin"/>:<></>
         }
-        <button  type="button" className="" onClick={()=>{reset?.()}} disabled={disabled}><HiXMark className="w-icon h-icon"/> </button>
+        <button  type="button" className="" onClick={()=>{reset?.()}} disabled={disabled} tabIndex={-1}><HiXMark className="w-icon h-icon"/> </button>
       </span>
     </span>
 
