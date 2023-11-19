@@ -1,25 +1,44 @@
 // page.js
 "use client";
 
-import Map, { Layer, MapRef, Marker, Source } from "react-map-gl";
+import Map, { Layer, MapRef, MapboxStyle, Marker, Source } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 import { useMap } from "@/hooks/MapProvider";
-import { useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 import { HiMapPin } from "react-icons/hi2";
+import MAP_STYLE from './map-style-basic-v8.json';
 
 const MainMap = ()=>{
-  const {mapConfig, direction, onMapClick} = useMap();
+  const [cursor, setCursor] = useState<string>('auto');
+  const {mapConfig, direction, setMapClickLocation, waitingMapClickKey} = useMap();
   const mapRef = useRef<MapRef>(null);
+  
+  const onMouseEnter = useCallback(() => setCursor('pointer'), []);
+  const onMouseLeave = useCallback(() => setCursor('auto'), []);
+  
   return (
     <Map
       ref={mapRef}
       mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
-      mapStyle="mapbox://styles/mapbox/streets-v12"
+      mapStyle={MAP_STYLE as MapboxStyle}
       initialViewState={{ latitude: 22.372035, longitude: 114.107848, zoom: 10, ...mapConfig }}
       maxZoom={20}
       minZoom={3}
-      onClick={onMapClick}
+      onClick={ev=>waitingMapClickKey&&setMapClickLocation(ev.features?.[0]?.properties?.name_en)}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      cursor={cursor}
+      interactiveLayerIds={
+        MAP_STYLE.layers.map(layer => layer.id).filter(it=>
+          [
+            /park/,
+            /building/,
+            /bridge|road|tunnel/,
+            /label|place|poi/
+          ].find(regex=>regex.test(it))
+        )
+      }
     >
       {
         direction?.routes?

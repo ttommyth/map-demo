@@ -9,8 +9,9 @@ export const MapProviderMock = ({children}:{children:React.ReactNode})=>{
     },
     setMapConfig: ()=>{},
     setPath: ()=>{},
-    setOnMapClick: ()=>{},
-    onMapClick: ()=>{},
+    setWaitingMapClickKey: ()=>{},
+    setMapClickLocation: ()=>{},
+    mapClickLocation: undefined,
   }}>
     {children}
   </MapContext.Provider>

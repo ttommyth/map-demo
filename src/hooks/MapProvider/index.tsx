@@ -1,6 +1,7 @@
 "use client"
 import { getMapboxDirections } from "@/data/mapbox-directions-api/get";
 import { useQuery } from "@tanstack/react-query";
+import { MapLayerEventType, MapLayerMouseEvent } from "mapbox-gl";
 import { FC, PropsWithChildren, createContext, useContext, useEffect, useMemo, useState } from "react";
 import { MapMouseEvent } from "react-map-gl";
 
@@ -25,17 +26,19 @@ export type MapContextType={
   },
   setMapConfig:(v:MapContextType["mapConfig"])=>unknown,
   setPath:(v:[longitude:number,latitude:number][]|undefined)=>unknown,
-  setOnMapClick: (v:(ev: MapMouseEvent)=>unknown)=>unknown,
-  onMapClick: (ev: MapMouseEvent)=>unknown,
-  // setDirection:(v:MapContextType["direction"])=>unknown,
+  waitingMapClickKey?:string,
+  setWaitingMapClickKey:(v:string|undefined)=>unknown,
+  mapClickLocation: string | undefined,
+  setMapClickLocation:(v:string | undefined)=>unknown,
 }
 
 export const MapContext = createContext<MapContextType | null>(null);
 
 export const MapProvider:FC<PropsWithChildren<unknown>> = ({children})=>{
-  const [onMapClick, setOnMapClick] = useState<MapContextType["onMapClick"] | undefined>(undefined);
+  const [mapClickLocation, setMapClickLocation] = useState<string | undefined>(undefined);
   const [mapConfig, setMapConfig] = useState<MapContextType["mapConfig"]>(undefined);
   const [path, setPath] = useState<[longitude:number,latitude:number][] | undefined>(undefined);
+  const [waitingMapClickKey, setWaitingMapClickKey] = useState<string|undefined>(undefined);
   const getDirectionQuery = useQuery({
     queryKey: ["getDirection", ...path??[]],
     queryFn:()=>{
@@ -55,7 +58,7 @@ export const MapProvider:FC<PropsWithChildren<unknown>> = ({children})=>{
       return undefined;
     }
   }, [getDirectionQuery]);
-  return <MapContext.Provider value={{mapConfig, direction, setMapConfig, setPath, onMapClick: onMapClick?onMapClick:(ev:any)=>{}, setOnMapClick}}>
+  return <MapContext.Provider value={{mapConfig, direction, setMapConfig, setPath, mapClickLocation, setMapClickLocation, waitingMapClickKey, setWaitingMapClickKey}}>
     {children}
   </MapContext.Provider>
 };
