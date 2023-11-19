@@ -36,7 +36,7 @@ const LocationTextBox:FC<{value: string, onValueChange:(v:string)=>unknown, disa
         {
           waitingMapClickKey==name?
             <span className="text-gray-500 flex">
-              click on the map to select location
+              <span className="hidden sm:block">click on the map to select location</span>
               <HiMapPin className="" title="click on the map to select location"/>
             </span>:<></>
         }
