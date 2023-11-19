@@ -47,7 +47,7 @@ const LocationTextBox:FC<{value: string, onValueChange:(v:string)=>unknown, disa
           onFocus={ev=>{
             setWaitingMapClickKey(name);
           }}
-          className=" w-full rounded-md ring-base-500 ring-1 focus:ring-primary-500 focus:ring-2 focus:outline-none px-2 py-1 disabled:bg-gray-100 disabled:cursor-not-allowed"
+          className=" w-full rounded-md ring-base-500 ring-1 focus:ring-primary-500 focus:ring-2 focus:outline-none px-2 py-1 disabled:bg-gray-100 disabled:cursor-not-allowed pr-8"
         />
         {
           debouncedValue.length>=2?
