@@ -7,9 +7,9 @@ import { MapMouseEvent } from "react-map-gl";
 
 export type MapContextType={
   mapConfig?:{
-    latitude:number,
-    longitude:number,
-    zoom:number,
+    latitude?:number,
+    longitude?:number,
+    zoom?:number,
   },
   direction?:{
     routes:{

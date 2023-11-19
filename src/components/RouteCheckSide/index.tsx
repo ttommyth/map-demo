@@ -22,7 +22,7 @@ const validationSchema = yup.object({
 
 
 const RouteCheckSide = () => {
-  const {setPath} = useMap();
+  const {setPath, setMapConfig} = useMap();
   const { register, handleSubmit, watch,setValue, control, formState: { errors } } = useForm<RouteCheckFormInputs>({
     resolver: yupResolver(validationSchema),
     defaultValues:{
@@ -56,10 +56,11 @@ const RouteCheckSide = () => {
       return;
     if(getRouteQuery.data?.status=="success" && getRouteQuery.status=="success"){
       setPath(getRouteQuery.data?.path);
+      setMapConfig({latitude: getRouteQuery.data?.path[0][1], longitude: getRouteQuery.data?.path[0][0], zoom: 12});
     }else{
       setPath(undefined);
     }
-  }, [postRouteMutate, getRouteQuery]);
+  }, [getRouteQuery.data, getRouteQuery.data, getRouteQuery.isFetching, getRouteQuery.status, postRouteMutate.isPending]);
   const onSubmit: SubmitHandler<RouteCheckFormInputs> = data => postRouteMutate.mutate(data);
   const formLoading = postRouteMutate.isPending || getRouteQuery.isFetching;
   return <form onSubmit={handleSubmit(onSubmit)} className="p-4 flex flex-col gap-4">
@@ -89,7 +90,7 @@ const RouteCheckSide = () => {
       </span>
     </div>
     <div className="flex flex-col gap-4 relative">
-      <button type="submit" className="ring-2 ring-primary-500 hover:ring-primary-600 bg-primary-50 hover:bg-primary-100 transition-colors p-4 rounded-md 
+      <button type="submit" className="ring-2 ring-primary-500 hover:ring-primary-600 bg-primary-50 hover:bg-primary-100 transition-colors p-2 sm:p-4  rounded-md 
       disabled:bg-gray-100  disabled:ring-gray-500 disabled:cursor-wait relative"
       disabled={formLoading}>
         Search Route
@@ -117,10 +118,12 @@ const RouteCheckSide = () => {
           </span>:<></>}
         {
           (getRouteQuery.status=="success"&&getRouteQuery.data?.status=="success")?
-            <div className="border-success-600 border rounded-md w-full p-4 flex flex-col bg-success-100">
-              <span className="text-success-600 text-xl">Route Found</span>
-              <span title="Total Time">Total Time: {getRouteQuery.data.total_time}</span>
-              <span title="Total Distance">Total Distance: {getRouteQuery.data.total_distance}</span>
+            <div className="border-success-600 border rounded-md w-full p-4 flex flex-row sm:flex-col bg-success-100 gap-2">
+              <span className="text-success-600 text-md sm:text-xl">Route Found</span>
+              <div className="flex flex-col text-xs">
+                <span title="Total Time">Total Time: {getRouteQuery.data.total_time}</span>
+                <span title="Total Distance">Total Distance: {getRouteQuery.data.total_distance}</span>
+              </div>
             </div>:<>
             </>
         }
