@@ -1,6 +1,6 @@
 "use client";
 import LocationTextBox from "@/components/LocationTextBox"
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { PostRouteRequest, getRoute, postRoute } from "@/data/route-check-l1-api/route";
 import { useMap } from "@/hooks/MapProvider";
 import { useEffect } from "react";
@@ -23,7 +23,7 @@ const validationSchema = yup.object({
 
 const RouteCheckSide = () => {
   const {setPath} = useMap();
-  const { register, handleSubmit, watch,setValue, formState: { errors } } = useForm<RouteCheckFormInputs>({
+  const { register, handleSubmit, watch,setValue, control, formState: { errors } } = useForm<RouteCheckFormInputs>({
     resolver: yupResolver(validationSchema),
     defaultValues:{
       origin: "",
@@ -67,11 +67,25 @@ const RouteCheckSide = () => {
       <div className="absolute left-0  top-0 py-4 h-full"><div className="border-dotted border-l-2 border-gray-500 h-full ml-[0.7rem] "></div></div>
       <span className="relative flex items-center  w-full gap-2 bg-base-50">
         <FaRegCircle className="w-icon h-icon "/>
-        <LocationTextBox inputProps={{...register("origin"), disabled: formLoading}} reset={()=>setValue("origin", "")} label="Starting location" name="origin" error={errors.origin?.message}/>
+        <Controller
+          name="origin"
+          control={control}
+          render={({ field }) =>
+            <LocationTextBox value={field.value} onValueChange={v=>field.onChange(v)} disabled={formLoading} reset={()=>setValue(field.name, "")} 
+              label="Starting location" name={field.name} error={errors[field.name]?.message}/>
+          }
+        />
       </span>
       <span className="relative flex items-center   w-full gap-2 bg-base-50">
         <HiMapPin className="w-icon h-icon"/>
-        <LocationTextBox inputProps={{...register("destination"), disabled: formLoading}} reset={()=>setValue("destination", "")} label="Drop-off point" name="destination" error={errors.destination?.message}/>
+        <Controller
+          name="destination"
+          control={control}
+          render={({ field }) =>
+            <LocationTextBox value={field.value} onValueChange={v=>field.onChange(v)} disabled={formLoading} reset={()=>setValue(field.name, "")} 
+              label="Drop-off point" name={field.name} error={errors[field.name]?.message}/>
+          }
+        />
       </span>
     </div>
     <div className="flex flex-col gap-4 relative">
