@@ -5,6 +5,7 @@ import { MapProvider } from '@/hooks/MapProvider'
 import MainMap from '@/components/MainMap'
 import { twMerge } from 'tailwind-merge'
 import ClientProviders from '@/utils/ClientProviders'
+import { Suspense } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -21,12 +22,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={twMerge(inter.className, "bg-white text-base-800")}>
-        <ClientProviders>
-          <div className='absolute w-screen h-screen'>
-            <MainMap />
-          </div>
-          {children}
-        </ClientProviders>
+        <Suspense>
+          <ClientProviders>
+            <div className='absolute w-screen h-screen'>
+              <MainMap />
+            </div>
+            {children}
+          </ClientProviders>
+        </Suspense>
       </body>
     </html>
   )
