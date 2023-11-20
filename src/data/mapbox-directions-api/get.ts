@@ -117,7 +117,12 @@ export interface Waypoint {
 
 
 export const getMapboxDirections = async ({profile, coordinates}:GetDirectionsRequest):Promise<GetDirectionsResponse>=>{
-  //TODO: validation
+  if(coordinates.length<2) throw new Error("At least 2 coordinates are required");
+  if(coordinates.length>25) throw new Error("At most 25 coordinates are allowed");
+  if(coordinates.some(it=>it.length!=2)) throw new Error("Each coordinate should be a pair of longitude and latitude");
+  if(!["traffic","walking","cycling","driving"].includes(profile)) throw new Error("Invalid profile");
+  if(coordinates.some(it=>it[0]>180||it[0]<-180 || it[1]>90 || it[1]<-90)) throw new Error("Invalid coordinate");
+  
   const url = new URL(`./${profile}/${encodeURIComponent(coordinates.map(it=>`${it[0]},${it[1]}`).join(";"))}`, process.env.NEXT_PUBLIC_MAPBOX_DIRECTIONS_API_BASE_URL);
   url.searchParams.set("alternatives", "false");
   url.searchParams.set("geometries", "geojson");
