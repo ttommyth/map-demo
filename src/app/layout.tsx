@@ -6,12 +6,14 @@ import MainMap from '@/components/MainMap'
 import { twMerge } from 'tailwind-merge'
 import ClientProviders from '@/utils/ClientProviders'
 import { Suspense } from 'react'
+import { Analytics } from '@vercel/analytics/react'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Map Demo',
   description: 'Map Demo by tommyis.me',
+  metadataBase: new URL('https://map-demo.tommyis.me'),
 }
 
 export default function RootLayout({
@@ -30,6 +32,7 @@ export default function RootLayout({
             {children}
           </ClientProviders>
         </Suspense>
+        <Analytics />
       </body>
     </html>
   )
