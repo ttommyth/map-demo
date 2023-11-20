@@ -23,7 +23,9 @@ export type PostRouteResponse = {
  *    Internal Server Error
  */
 export const postRoute = async (request:PostRouteRequest):Promise<PostRouteResponse>=>{
-  //TODO: validation
+  if(request.origin.length==0) throw new Error("Origin is empty");
+  if(request.destination.length==0) throw new Error("Destination is empty");
+  
   return axios.post<PostRouteResponse>(new URL(`./route`, process.env.NEXT_PUBLIC_ROUTE_CHECK_L1_BASE_URL).toString(), request, {
     headers: {
       'Content-Type': 'application/json'
