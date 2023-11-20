@@ -1,6 +1,6 @@
-import { MapContext } from ".";
+import { MapContext, MapContextType } from ".";
 
-export const MapProviderMock = ({children}:{children:React.ReactNode})=>{
+export const MapProviderMock = ({children, mockValue }:{children:React.ReactNode,  mockValue?: Partial<MapContextType>})=>{
   return <MapContext.Provider value={{
     mapConfig: {
       latitude: 0,
@@ -12,6 +12,7 @@ export const MapProviderMock = ({children}:{children:React.ReactNode})=>{
     setWaitingMapClickKey: ()=>{},
     setMapClickLocation: ()=>{},
     mapClickLocation: undefined,
+    ...mockValue
   }}>
     {children}
   </MapContext.Provider>
